@@ -1,30 +1,37 @@
-# React + TypeScript + Vite
+# React + SQLX
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A 1$ library for writing SQL queries in JSX-like syntax.
 
-Currently, two official plugins are available:
+## Example
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
+```ts
+export default function main() {
+  return (
+    <select from="employees">
+      <where>
+        <column name="department">
+          <eq>
+            <raw>'Sales'</raw>
+          </eq>
+        </column>
+        <and>
+          <column name="salary">
+            <in>
+              <parenthesis>
+                <raw>30000</raw>
+                <raw>50000</raw>
+              </parenthesis>
+            </in>
+          </column>
+        </and>
+      </where>
+    </select>
+  );
 }
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Output:
+
+```sql
+SELECT * FROM employees WHERE department = 'Sales' AND salary IN (30000, 50000)
+```
